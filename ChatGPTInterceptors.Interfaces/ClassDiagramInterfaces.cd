@@ -1,0 +1,63 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Interface Name="ChatGPTInterceptors.Interfaces.IChatSession">
+    <Position X="5.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAABAAAA=</HashCode>
+      <FileName>IChatSession.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="UserInterceptors" />
+      <Property Name="AgentInterceptors" />
+    </ShowAsCollectionAssociation>
+  </Interface>
+  <Interface Name="ChatGPTInterceptors.Interfaces.IChatInterceptor">
+    <Position X="9.75" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAQ=</HashCode>
+      <FileName>IChatInterceptor.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Action" />
+    </ShowAsAssociation>
+  </Interface>
+  <Interface Name="ChatGPTInterceptors.Interfaces.ICompletionChatInterceptor">
+    <Position X="16.5" Y="4" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ICompletionChatInterceptor.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="CompletionRequest" />
+    </ShowAsAssociation>
+  </Interface>
+  <Interface Name="ChatGPTInterceptors.Interfaces.ICompletionResponse">
+    <Position X="6" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAgACAAAAAAAAAAAA=</HashCode>
+      <FileName>ICompletionResponse.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="ChatGPTInterceptors.Interfaces.ICompletionRequest">
+    <Position X="5.5" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ICompletionRequest.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="ChatGPTInterceptors.Interfaces.IInterceptingResult">
+    <Position X="15.5" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAACAAAAAAEAAAAAAAAAAE=</HashCode>
+      <FileName>InterceptResult.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="ChatGPTInterceptors.Interfaces.IChatInterceptedAction">
+    <Position X="12" Y="6" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEA=</HashCode>
+      <FileName>IChatIntercepterAction.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
