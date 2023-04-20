@@ -1,4 +1,7 @@
-﻿namespace ChatGPTInterceptors.Interfaces
+﻿using ChatGPTInterceptors.Interfaces.Entities;
+using System.Threading.Tasks;
+
+namespace ChatGPTInterceptors.Interfaces
 {
     public interface IInterceptingResult
     {
@@ -6,7 +9,7 @@
 
         Task InterceptionActionsCompletion { get; }
 
-        Task<ExecuteResultRecord> InterceptionActionsResult { get; }
+        Task InterceptionActionsResult { get; }
     }
 
 }

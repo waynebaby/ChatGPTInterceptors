@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.33530.505
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatGPTInterceptors.Interfaces", "ChatGPTInterceptors.Interfaces\ChatGPTInterceptors.Interfaces.csproj", "{8AC0FB03-2743-4977-A8CB-C02071D23356}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChatGPTInterceptors.Interfaces", "ChatGPTInterceptors.Interfaces\ChatGPTInterceptors.Interfaces.csproj", "{8AC0FB03-2743-4977-A8CB-C02071D23356}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatGPTInterceptors.Core", "ChatGPTInterceptors.Core\ChatGPTInterceptors.Core.csproj", "{D9083D33-852C-4C4C-8C6A-27E01CE5662D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChatGPTInterceptors.Core", "ChatGPTInterceptors.Core\ChatGPTInterceptors.Core.csproj", "{D9083D33-852C-4C4C-8C6A-27E01CE5662D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatGPTInterceptors.Playground.Console", "ChatGPTInterceptors.Playground.Console\ChatGPTInterceptors.Playground.Console.csproj", "{131D4875-0A61-4902-8B7F-5E82747A8554}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{D9083D33-852C-4C4C-8C6A-27E01CE5662D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D9083D33-852C-4C4C-8C6A-27E01CE5662D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D9083D33-852C-4C4C-8C6A-27E01CE5662D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{131D4875-0A61-4902-8B7F-5E82747A8554}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{131D4875-0A61-4902-8B7F-5E82747A8554}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{131D4875-0A61-4902-8B7F-5E82747A8554}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{131D4875-0A61-4902-8B7F-5E82747A8554}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

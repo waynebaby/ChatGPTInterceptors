@@ -8,4 +8,8 @@
 	<ItemGroup>
 		<PackageReference Include="Azure.AI.OpenAI" Version="1.0.0-beta.5" />
 	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\ChatGPTInterceptors.Interfaces\ChatGPTInterceptors.Interfaces.csproj" />
+	</ItemGroup>
 </Project>
