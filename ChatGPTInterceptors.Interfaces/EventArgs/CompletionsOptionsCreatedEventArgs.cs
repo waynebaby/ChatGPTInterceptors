@@ -2,13 +2,13 @@
 
 namespace ChatGPTInterceptors.Interfaces.EventArgs
 {
-    public class CompletionsOptionsCreatedEventArgs 
+    public class CompletionsOptionsCreatedEventArgs : CompletionEventArgsBase
     {
-        public CompletionsOptionsCreatedEventArgs(ChatCompletionsOptions createdInstance)
+        public CompletionsOptionsCreatedEventArgs(CompletionsOptions createdInstance, ICompletion completion):base(completion)
         {
             CreatedInstance = createdInstance;
         }
 
-        public ChatCompletionsOptions CreatedInstance { get; }
+        public CompletionsOptions CreatedInstance { get; }
     }
 }

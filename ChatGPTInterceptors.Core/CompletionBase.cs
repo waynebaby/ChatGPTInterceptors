@@ -25,28 +25,37 @@ namespace ChatGPTInterceptors.Core
         public string DeploymentOrModelName { get; set; }
 
         public event EventHandler<CompletionsOptionsCreatedEventArgs>? CompletionsOptionsCreated;
+        private async Task<CompletionsOptions> PrepareOptions(object[] parameters)
+        {
+            var input = string.IsNullOrWhiteSpace(PromptTemplate) ? "" : string.Format(PromptTemplate, parameters);
+            var options = await completionsOptionsFactory();
+            OnPreparingOptions(input, options);
+            CompletionsOptionsCreated?.Invoke(this, new CompletionsOptionsCreatedEventArgs(options, this));
+            return options;
+        }
+
         protected virtual void OnPreparingOptions(string prompt, CompletionsOptions options)
         {
             options.Prompts.Clear();
-            options.Prompts.Add(prompt);
+            if (!string.IsNullOrWhiteSpace(prompt))
+            {
+                options.Prompts.Add(prompt);
+            }
+
         }
 
-        public async Task<ExecuteResult< Completions>> ExecuteAsync(params object[] parameters)
+        public async Task<ExecuteResult<Completions>> ExecuteAsync(params object[] parameters)
         {
             try
             {
-
-                var input = string.Format(PromptTemplate, parameters);
-
-                var options = await completionsOptionsFactory();
-                OnPreparingOptions(input, options);
+                CompletionsOptions options = await PrepareOptions(parameters);
 
                 var result = await client.GetCompletionsAsync(DeploymentOrModelName, options);
                 var value = result.Value;
 
                 return new ExecuteResult<Completions>
                 {
-    
+
                     Exception = null,
                     Value = value
 
@@ -66,23 +75,19 @@ namespace ChatGPTInterceptors.Core
             }
         }
 
-
+   
         public async Task<ExecuteResult<StreamingCompletions>> ExecuteStreamingAsync(params object[] parameters)
         {
             try
             {
 
-                var input = string.Format(PromptTemplate, parameters);
-
-                var options = await completionsOptionsFactory();
-                OnPreparingOptions(input, options);
-
+                CompletionsOptions options = await PrepareOptions(parameters);
                 var result = await client.GetCompletionsStreamingAsync(DeploymentOrModelName, options);
                 var value = result.Value;
 
                 return new ExecuteResult<StreamingCompletions>
                 {
-                   
+
 
                     Exception = null,
                     Value = value
@@ -95,7 +100,7 @@ namespace ChatGPTInterceptors.Core
 
                 return new ExecuteResult<StreamingCompletions>
                 {
- 
+
                     Exception = ex,
                     Value = null
 
