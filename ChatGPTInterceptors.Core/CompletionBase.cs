@@ -3,54 +3,57 @@ using ChatGPTInterceptors.Interfaces;
 using ChatGPTInterceptors.Interfaces.Entities;
 using ChatGPTInterceptors.Interfaces.EventArgs;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ChatGPTInterceptors.Core
 {
     public abstract class CompletionBase : ICompletion
     {
-        protected CompletionBase(OpenAIClient client, string deploymentOrModelName, string promptTemplate, Func<Task<CompletionsOptions>> completionsOptionsFactory)
+        protected CompletionBase(OpenAIClient client, string deploymentOrModelName, CompletionsOptions completionsOptions)
         {
-            PromptTemplate = promptTemplate;
+
             this.client = client;
-            this.completionsOptionsFactory = completionsOptionsFactory;
+            this.completionsOptions = completionsOptions;
             DeploymentOrModelName = deploymentOrModelName;
+            PromptTemplate = completionsOptions.Prompts.FirstOrDefault() ?? "{0}";
         }
 
 
         protected OpenAIClient client;
-        private readonly Func<Task<CompletionsOptions>> completionsOptionsFactory;
+        private CompletionsOptions completionsOptions;
 
         public string PromptTemplate { get; set; }
         public string DeploymentOrModelName { get; set; }
 
-        public event EventHandler<CompletionsOptionsCreatedEventArgs>? CompletionsOptionsCreated;
-        private async Task<CompletionsOptions> PrepareOptions(object[] parameters)
+
+        private void PrepareOptions(object[] parameters)
         {
-            var input = string.IsNullOrWhiteSpace(PromptTemplate) ? "" : string.Format(PromptTemplate, parameters);
-            var options = await completionsOptionsFactory();
-            OnPreparingOptions(input, options);
-            CompletionsOptionsCreated?.Invoke(this, new CompletionsOptionsCreatedEventArgs(options, this));
-            return options;
+            if (parameters == null || parameters.Length == 0)
+            {
+                parameters=new object[] { "What is the answer of everything?" };
+
+            }
+            
+          
+                var input = string.IsNullOrWhiteSpace(PromptTemplate) ? "" : string.Format(PromptTemplate, parameters);
+                OnPreparingOptions(input, completionsOptions);
+        
         }
 
         protected virtual void OnPreparingOptions(string prompt, CompletionsOptions options)
         {
             options.Prompts.Clear();
-            if (!string.IsNullOrWhiteSpace(prompt))
-            {
-                options.Prompts.Add(prompt);
-            }
-
+            options.Prompts.Add(prompt);
         }
 
         public async Task<ExecuteResult<Completions>> ExecuteAsync(params object[] parameters)
         {
             try
             {
-                CompletionsOptions options = await PrepareOptions(parameters);
+                PrepareOptions(parameters);
 
-                var result = await client.GetCompletionsAsync(DeploymentOrModelName, options);
+                var result = await client.GetCompletionsAsync(DeploymentOrModelName, completionsOptions);
                 var value = result.Value;
 
                 return new ExecuteResult<Completions>
@@ -75,20 +78,18 @@ namespace ChatGPTInterceptors.Core
             }
         }
 
-   
+
         public async Task<ExecuteResult<StreamingCompletions>> ExecuteStreamingAsync(params object[] parameters)
         {
             try
             {
 
-                CompletionsOptions options = await PrepareOptions(parameters);
-                var result = await client.GetCompletionsStreamingAsync(DeploymentOrModelName, options);
+                PrepareOptions(parameters);
+                var result = await client.GetCompletionsStreamingAsync(DeploymentOrModelName, completionsOptions);
                 var value = result.Value;
 
                 return new ExecuteResult<StreamingCompletions>
                 {
-
-
                     Exception = null,
                     Value = value
 
@@ -109,3 +110,4 @@ namespace ChatGPTInterceptors.Core
         }
     }
 }
+ 

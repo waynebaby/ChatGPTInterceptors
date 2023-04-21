@@ -1,19 +1,23 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
-    <Nullable>enable</Nullable>
-	  <AssemblyVersion>0.0.3</AssemblyVersion>
-    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>$(AssemblyVersion)-alpha</Version>
-    <BaseOutputPath>..\bin</BaseOutputPath>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>netstandard2.1</TargetFramework>
+		<Nullable>enable</Nullable>
+		<AssemblyVersion>0.$([System.DateTime]::UtcNow.ToString(yyMM.HHmm.ssff))</AssemblyVersion>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+
+		<BaseOutputPath>..\bin</BaseOutputPath>
+
+		<Version Condition="'$(Configuration)'=='Release'">$(AssemblyVersion)"</Version>
+		<Version Condition="'$(Configuration)'=='Debug'">$(AssemblyVersion)-alpha</Version>
+	</PropertyGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Azure.AI.OpenAI" Version="1.0.0-beta.5" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0-preview.3.23174.8" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\ChatGPTInterceptors.Interfaces\ChatGPTInterceptors.Interfaces.csproj" />
+		<ProjectReference Include="..\ChatGPTInterceptors.Interfaces\ChatGPTInterceptors.Interfaces.csproj" />
 	</ItemGroup>
 </Project>

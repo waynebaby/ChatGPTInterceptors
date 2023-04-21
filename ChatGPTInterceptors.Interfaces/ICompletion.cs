@@ -13,7 +13,7 @@ namespace ChatGPTInterceptors.Interfaces
     {
         public string DeploymentOrModelName { get; set; }
 
-        event EventHandler<CompletionsOptionsCreatedEventArgs>? CompletionsOptionsCreated;
+   
 
         string PromptTemplate { get; set; }
 

@@ -4,14 +4,18 @@
 	<PropertyGroup>
 		<TargetFramework>netstandard2.1</TargetFramework>
 		<Nullable>enable</Nullable>
-		<AssemblyVersion>0.0.3</AssemblyVersion>
-		<Version>$(AssemblyVersion)-alpha</Version>
-		<BaseOutputPath>..\bin</BaseOutputPath>
+		<AssemblyVersion>0.$([System.DateTime]::UtcNow.ToString(yyMM.HHmm.0000))</AssemblyVersion>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+
+		<BaseOutputPath>..\bin</BaseOutputPath>
+
+		<Version Condition="'$(Configuration)'=='Release'">$(AssemblyVersion)"</Version>
+		<Version Condition="'$(Configuration)'=='Debug'">$(AssemblyVersion)-alpha</Version>
 	</PropertyGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Azure.AI.OpenAI" Version="1.0.0-beta.5" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0-preview.3.23174.8" />
 		<PackageReference Include="System.Reactive.Linq" Version="5.0.0" />
 	</ItemGroup>
 
