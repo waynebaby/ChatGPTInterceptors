@@ -5,63 +5,68 @@ using System.Collections.Concurrent;
 
 namespace ChatGPTInterceptors.Core
 {
-    public abstract class FactoryBase<Product> : IFactory<Product>
+    public abstract class FactoryBase<TProduct> : IFactory<TProduct>
 
-        where Product : class
+        where TProduct : class
     {
-        protected readonly Func<Product> productInstanceCreator;
-        protected ConcurrentDictionary<string, Func<Product>> factories = new ConcurrentDictionary<string, Func<Product>>();
-        public FactoryBase(IServiceProvider serviceProvider)
+        protected readonly Func<IServiceProvider, TProduct> productInstanceCreator;
+        protected ConcurrentDictionary<string, Func<IServiceProvider, TProduct?>> factories = new ConcurrentDictionary<string, Func<IServiceProvider, TProduct?>>();
+        public IServiceProvider ServiceProvider { get; }
+
+        public FactoryBase(IServiceProvider serviceProvider, Func<IServiceProvider, TProduct> productInstanceCreator)
         {
-            this.productInstanceCreator = () => serviceProvider.GetRequiredService<Product>();
+            ServiceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
+            this.productInstanceCreator = productInstanceCreator ?? throw new ArgumentNullException(nameof(productInstanceCreator));
         }
 
-        public FactoryBase(Func<Product> productInstanceCreator)
-        {
-            this.productInstanceCreator = productInstanceCreator;
-        }
 
 
-
-        public virtual IFactory<Product> AddDefault(Action<Product> productDecorator)
+        public virtual IFactory<TProduct> AddDefault(Action<IServiceProvider, TProduct> productDecorator)
         {
             return AddVariant("", productDecorator);
         }
 
 
 
-        public virtual IFactory<Product> AddVariant(string name, Action<Product> productDecorator)
+        public virtual IFactory<TProduct> AddVariant(string name, Action<IServiceProvider, TProduct> productDecorator)
         {
             if (string.IsNullOrWhiteSpace(name))
             {
                 name = "";
             }
 
-            Func<Product?> factoryInstance = () =>
+            Func<IServiceProvider, TProduct?> factoryInstance = sp =>
             {
-                var product = productInstanceCreator();
-                productDecorator(product);
+                var product = productInstanceCreator(sp);
+                productDecorator(sp, product);
                 return product;
             };
 
 
-            factories.AddOrUpdate(name, factoryInstance, (_, __) => factoryInstance);
+            _ = factories.AddOrUpdate(name, factoryInstance, (_, __) => factoryInstance);
 
             return this;
 
         }
 
-        public Product CreateDefaltProduct()
+        public TProduct CreateDefaltProduct()
         {
             return CreateProduct("");
         }
 
-        public Product CreateProduct(string name)
+        public TProduct CreateProduct(string name)
         {
             if (factories.TryGetValue(name, out var builderFactory))
             {
-                return builderFactory();
-
+                var rval = builderFactory(ServiceProvider);
+                if (rval is null)
+                {
+                    throw new IndexOutOfRangeException($"The builder with name '{name}' created a null referece of {typeof(TProduct).Name}");
+                }
+                else
+                {
+                    return rval;
+                }
             }
             else
             {

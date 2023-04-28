@@ -1,4 +1,5 @@
-﻿using Azure.AI.OpenAI;
+﻿using Azure;
+using Azure.AI.OpenAI;
 using ChatGPTInterceptors.Interfaces;
 using System;
 using System.Net.Sockets;
@@ -6,21 +7,40 @@ using System.Threading.Tasks;
 
 namespace ChatGPTInterceptors.Core
 {
-    public class BasicCompletionClientBuilder : ICompletionClientBuilder 
+    public class BasicCompletionClientBuilder : ICompletionClientBuilder
     {
-
         public BasicCompletionClientBuilder()
         {
+        }
 
+        public BasicCompletionClientBuilder(IServiceProvider serviceProvider, IOpenAIConfiguration openAIConfiguration)
+        {
+            DeploymentOrModelName = openAIConfiguration.DeploymentOrModelName;
 
+            OpenClientFactory = new Func<Task<OpenAIClient?>>(async () =>
+            {
+                if (openAIConfiguration.APIKey == null)
+                {
+                    throw new NullReferenceException(nameof(openAIConfiguration.APIKey));
+                }
+                if (openAIConfiguration.Host == null)
+                {
+                    throw new NullReferenceException(nameof(openAIConfiguration.Host));
+                }
+                var uri = new Uri($"https://{openAIConfiguration.Host}/");
+                var client = new OpenAIClient(uri, new AzureKeyCredential(openAIConfiguration.APIKey));
+                return client;
+            });
+            ServiceProvider = serviceProvider;
         }
 
 
-        public string? DeploymentOrModelName { get; set; }
+        public string? DeploymentOrModelName { get; protected set; }
         public ICompletion? Product { get; private set; }
-        public Func<Task<CompletionsOptions>>? CompletionsOptionsFactory { get; set; }
+        public Func<IServiceProvider, CompletionsOptions, Task>? CompletionsOptionsSettings { get; set; }
         public string? PromptOrTemplate { get; set; }
-        public Func<Task<OpenAIClient?>>? OpenClientFactory { get; set; }
+        public Func<Task<OpenAIClient?>>? OpenClientFactory { get; protected set; }
+        public IServiceProvider ServiceProvider { get; }
 
         public async Task StartBuildingAsync()
         {
@@ -33,25 +53,22 @@ namespace ChatGPTInterceptors.Core
             {
                 throw new NullReferenceException(nameof(OpenClientFactory));
             }
-            if (CompletionsOptionsFactory == null)
-            {
-                throw new NullReferenceException(nameof(CompletionsOptionsFactory));
-            }
+      
 
             var client = await OpenClientFactory();
+
+
             if (client == null)
             {
                 throw new NullReferenceException("result of " + nameof(OpenClientFactory));
             }
 
-            var completionsOptions = await CompletionsOptionsFactory();
+            var completionsOptions = new CompletionsOptions();
 
-
-            if (CompletionsOptionsFactory == null)
+            if (CompletionsOptionsSettings!=null)
             {
-                throw new NullReferenceException("result of " + nameof(CompletionsOptionsFactory));
+                await CompletionsOptionsSettings(ServiceProvider, completionsOptions);
             }
-
 
             var completion = new BasicCompletion(client, DeploymentOrModelName, completionsOptions);
             Product = completion;
