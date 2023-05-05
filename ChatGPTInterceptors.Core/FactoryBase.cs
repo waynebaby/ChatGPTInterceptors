@@ -73,5 +73,15 @@ namespace ChatGPTInterceptors.Core
                 throw new IndexOutOfRangeException($"The builder with name '{name}' was not registered in the builder factory");
             }
         }
+
+        public IFactory<TProduct> AddDefault(Action<TProduct> builderConfiguration)
+        {
+            return AddDefault((sp, x) => builderConfiguration(x));
+        }
+
+        public IFactory<TProduct> AddVariant(string name, Action<TProduct> builderConfiguration)
+        {
+            return AddVariant(name, (sp, x) => builderConfiguration(x));
+        }
     }
 }

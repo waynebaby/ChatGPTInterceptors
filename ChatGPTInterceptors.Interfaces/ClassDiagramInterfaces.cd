@@ -34,11 +34,11 @@
       <FileName>IChatIntercepterAction.cs</FileName>
     </TypeIdentifier>
   </Interface>
-  <Interface Name="ChatGPTInterceptors.Interfaces.ICompletion" Collapsed="true">
+  <Interface Name="ChatGPTInterceptors.Interfaces.ICompletionRequest" Collapsed="true">
     <Position X="16.75" Y="2.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>ICompletion.cs</FileName>
+      <HashCode>AAAAAAAAEIAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAEA=</HashCode>
+      <FileName>ICompletionRequest.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Font Name="Segoe UI" Size="9" />

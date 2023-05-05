@@ -4,11 +4,11 @@ using System;
 
 namespace ChatGPTInterceptors.Core
 {
-    public class BasicCompletionClientFactory : FactoryBase<BasicCompletionClientBuilder>
+    public class BasicCompletionClientFactory : FactoryBase<ICompletionClient>
     {
    
 
-        public BasicCompletionClientFactory(IServiceProvider serviceProvider) : base(serviceProvider, sp=>sp.GetRequiredService<BasicCompletionClientBuilder>())
+        public BasicCompletionClientFactory(IServiceProvider serviceProvider) : base(serviceProvider, sp=>sp.GetRequiredService<ICompletionClient>())
         {
         }
 

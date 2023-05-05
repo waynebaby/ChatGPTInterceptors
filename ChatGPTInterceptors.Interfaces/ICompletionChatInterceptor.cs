@@ -7,6 +7,6 @@ namespace ChatGPTInterceptors.Interfaces
 {
     public interface ICompletionChatInterceptor : IChatInterceptor
     {
-        ICompletion Completion  { get;}
+        ICompletionRequest Completion  { get;}
     }
 }

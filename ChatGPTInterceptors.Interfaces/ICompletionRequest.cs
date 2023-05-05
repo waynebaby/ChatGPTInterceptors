@@ -9,7 +9,7 @@ using System;
 
 namespace ChatGPTInterceptors.Interfaces
 {
-    public interface ICompletion
+    public interface ICompletionRequest
     {
         public string DeploymentOrModelName { get; set; }
 
@@ -17,7 +17,7 @@ namespace ChatGPTInterceptors.Interfaces
 
         string PromptTemplate { get; set; }
 
-        Task<ExecuteResult<Completions>> ExecuteAsync(params object[] parameters);
+        Task<ExecuteResult<Completions>> RequestAsync(params object[] parameters);
 
         Task<ExecuteResult<StreamingCompletions>> ExecuteStreamingAsync(params object[] parameters);
     }

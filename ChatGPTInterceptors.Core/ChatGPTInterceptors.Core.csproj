@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<TargetFramework>netstandard2.1</TargetFramework>
 		<Nullable>enable</Nullable>
-		<AssemblyVersion>0.$([System.DateTime]::UtcNow.ToString(yyMM.HHmm.ssff))</AssemblyVersion>
+		<AssemblyVersion>0.$([System.DateTime]::UtcNow.ToString(MMdd.HHmm.0000))</AssemblyVersion>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 
 		<BaseOutputPath>..\bin</BaseOutputPath>

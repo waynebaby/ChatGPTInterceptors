@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace ChatGPTInterceptors.Core
 {
-    public abstract class CompletionBase : ICompletion
+    public abstract class CompletionRequestBase : ICompletionRequest
     {
-        protected CompletionBase(OpenAIClient client, string deploymentOrModelName, CompletionsOptions completionsOptions)
+        protected CompletionRequestBase(OpenAIClient client, string deploymentOrModelName, CompletionsOptions completionsOptions)
         {
 
             this.client = client;
@@ -31,14 +31,14 @@ namespace ChatGPTInterceptors.Core
         {
             if (parameters == null || parameters.Length == 0)
             {
-                parameters=new object[] { "What is the answer of everything?" };
+                parameters = new object[] { "What is the answer of everything?" };
 
             }
-            
-          
-                var input = string.IsNullOrWhiteSpace(PromptTemplate) ? "" : string.Format(PromptTemplate, parameters);
-                OnPreparingOptions(input, completionsOptions);
-        
+
+
+            var input = string.IsNullOrWhiteSpace(PromptTemplate) ? "" : string.Format(PromptTemplate, parameters);
+            OnPreparingOptions(input, completionsOptions);
+
         }
 
         protected virtual void OnPreparingOptions(string prompt, CompletionsOptions options)
@@ -47,11 +47,19 @@ namespace ChatGPTInterceptors.Core
             options.Prompts.Add(prompt);
         }
 
-        public async Task<ExecuteResult<Completions>> ExecuteAsync(params object[] parameters)
+        public async Task<ExecuteResult<Completions>> RequestAsync(params object[] parameters)
         {
             try
             {
                 PrepareOptions(parameters);
+
+#if DEBUG
+                foreach (var item in completionsOptions.Prompts)
+                {
+                    Console.WriteLine(item);
+
+                }
+#endif
 
                 var result = await client.GetCompletionsAsync(DeploymentOrModelName, completionsOptions);
                 var value = result.Value;
@@ -110,4 +118,3 @@ namespace ChatGPTInterceptors.Core
         }
     }
 }
- 

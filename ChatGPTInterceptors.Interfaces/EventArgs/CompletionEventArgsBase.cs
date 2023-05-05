@@ -3,11 +3,11 @@
     public abstract class CompletionEventArgsBase : System.EventArgs
     {
 
-        public CompletionEventArgsBase(ICompletion completion)
+        public CompletionEventArgsBase(ICompletionRequest completion)
         {
             Completion = completion;
         }
-        public ICompletion Completion { get; }
+        public ICompletionRequest Completion { get; }
 
     }
 }

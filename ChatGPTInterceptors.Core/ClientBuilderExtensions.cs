@@ -5,9 +5,9 @@ namespace ChatGPTInterceptors.Core
 {
     public static class ClientBuilderExtensions
     {
-        public static async Task<TClient?> BuildAsync<TClient>(this IClientBuilder<TClient> builder) where TClient : class
+        public static async Task<TClient?> ConnectAsync<TClient>(this IClient<TClient> builder) where TClient : class
         {
-            await builder.StartBuildingAsync();
+            await builder.StartConnectionAsync();
             return builder.Product;
         }
 

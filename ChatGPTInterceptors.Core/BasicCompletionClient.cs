@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 
 namespace ChatGPTInterceptors.Core
 {
-    public class BasicCompletionClientBuilder : ICompletionClientBuilder
+    public class BasicCompletionClient : ICompletionClient
     {
-        public BasicCompletionClientBuilder()
+        public BasicCompletionClient()
         {
         }
 
-        public BasicCompletionClientBuilder(IServiceProvider serviceProvider, IOpenAIConfiguration openAIConfiguration)
+        public BasicCompletionClient(IServiceProvider serviceProvider, IOpenAIConfiguration openAIConfiguration)
         {
             DeploymentOrModelName = openAIConfiguration.DeploymentOrModelName;
 
@@ -36,13 +36,13 @@ namespace ChatGPTInterceptors.Core
 
 
         public string? DeploymentOrModelName { get; protected set; }
-        public ICompletion? Product { get; private set; }
+        public ICompletionRequest? Product { get; private set; }
         public Func<IServiceProvider, CompletionsOptions, Task>? CompletionsOptionsSettings { get; set; }
         public string? PromptOrTemplate { get; set; }
         public Func<Task<OpenAIClient?>>? OpenClientFactory { get; protected set; }
         public IServiceProvider ServiceProvider { get; }
 
-        public async Task StartBuildingAsync()
+        public async Task StartConnectionAsync()
         {
             if (DeploymentOrModelName == null)
             {
@@ -70,8 +70,13 @@ namespace ChatGPTInterceptors.Core
                 await CompletionsOptionsSettings(ServiceProvider, completionsOptions);
             }
 
-            var completion = new BasicCompletion(client, DeploymentOrModelName, completionsOptions);
-            Product = completion;
+            var completionRequest = new CompletionRequest(client, DeploymentOrModelName, completionsOptions);
+            if (!string.IsNullOrWhiteSpace(PromptOrTemplate))
+            {
+                completionRequest.PromptTemplate = PromptOrTemplate;
+            }
+            
+            Product = completionRequest;
         }
     }
 }
